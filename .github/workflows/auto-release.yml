@@ -45,7 +45,7 @@ jobs:
       channel: ${{ steps.check.outputs.channel }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 2
 
@@ -94,7 +94,7 @@ jobs:
       new_version: ${{ steps.bump.outputs.new_version }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
@@ -137,7 +137,7 @@ jobs:
     if: needs.detect-release.outputs.should_release == 'true'
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: ${{ github.ref }}
 
@@ -162,7 +162,7 @@ jobs:
     environment: npm-publish
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: ${{ github.ref }}
 
@@ -228,7 +228,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: ${{ github.ref }}
           fetch-depth: 0
