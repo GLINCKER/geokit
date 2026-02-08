@@ -1,6 +1,6 @@
 {
   "name": "@glincker/geo-audit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Audit any website's AI-readiness. Score 0-100 for GEO (Generative Engine Optimization) best practices.",
   "type": "module",
   "main": "./dist/index.cjs",

@@ -1,6 +1,6 @@
 {
   "name": "@glincker/geokit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Unified CLI and fix pipeline for GeoKit — audit, generate, convert, and fix your site's AI-readiness.",
   "type": "module",
   "main": "./dist/index.cjs",
