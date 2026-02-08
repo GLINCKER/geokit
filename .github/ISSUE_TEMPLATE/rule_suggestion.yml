@@ -1,0 +1,111 @@
+name: Rule Suggestion
+description: Suggest a new audit rule for Geokit
+title: "[Rule]: "
+labels: ["enhancement", "rule-suggestion"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a new rule! Help us understand what you'd like to check.
+
+  - type: input
+    id: rule-name
+    attributes:
+      label: Rule Name
+      description: A short, descriptive name for this rule
+      placeholder: "e.g., Check Meta Description Length"
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-it-checks
+    attributes:
+      label: What Should This Rule Check?
+      description: Describe what this rule should validate or verify
+      placeholder: |
+        This rule should check that the meta description tag exists and is between 50-160 characters...
+    validations:
+      required: true
+
+  - type: textarea
+    id: why-it-matters
+    attributes:
+      label: Why Does This Matter for AI?
+      description: Explain why this is important for AI agents or LLMs accessing websites
+      placeholder: |
+        AI agents need clear meta descriptions to understand page context and relevance...
+    validations:
+      required: true
+
+  - type: textarea
+    id: pass-criteria
+    attributes:
+      label: Pass Criteria
+      description: When should this rule report a PASS?
+      placeholder: |
+        - Meta description exists
+        - Length is between 50-160 characters
+        - Contains relevant keywords
+    validations:
+      required: true
+
+  - type: textarea
+    id: warn-criteria
+    attributes:
+      label: Warning Criteria
+      description: When should this rule report a WARNING? (optional)
+      placeholder: |
+        - Meta description exists but is too short (<50 chars)
+        - Meta description is too long (>160 chars)
+    validations:
+      required: false
+
+  - type: textarea
+    id: fail-criteria
+    attributes:
+      label: Fail Criteria
+      description: When should this rule report a FAIL?
+      placeholder: |
+        - Meta description is completely missing
+        - Meta description is empty or whitespace only
+    validations:
+      required: true
+
+  - type: textarea
+    id: examples
+    attributes:
+      label: Examples
+      description: Provide examples of good and bad implementations
+      placeholder: |
+        **Good:**
+        ```html
+        <meta name="description" content="A comprehensive guide to SEO for AI agents, covering best practices and implementation tips.">
+        ```
+
+        **Bad:**
+        ```html
+        <!-- No meta description tag -->
+        ```
+    validations:
+      required: false
+
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: Any relevant documentation, articles, or standards
+      placeholder: |
+        - https://example.com/ai-seo-guidelines
+        - Related to Schema.org specification
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Anything else we should know?
+      placeholder: Add any other context here...
+    validations:
+      required: false
