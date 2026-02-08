@@ -57,7 +57,7 @@ export const r12ContentType: Rule = {
         score,
         maxScore: this.maxScore,
         message: `Content-type OK but ${issues.join(", ")}`,
-        recommendation: issues.includes("no compression")
+        recommendation: issues.some((i) => i.includes("no compression"))
           ? "Enable gzip or brotli compression to reduce payload size for AI crawlers."
           : "Add charset=utf-8 to your Content-Type header.",
         details: { contentType, encoding },

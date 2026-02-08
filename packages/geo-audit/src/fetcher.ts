@@ -3,7 +3,7 @@ import type { FetchResult, PageData, AuditOptions } from "./types.js";
 const DEFAULT_TIMEOUT = 10_000;
 const DEFAULT_USER_AGENT =
   "GeoKit/0.1.0 (+https://geo.glincker.com; AI-readiness audit)";
-const MAX_REDIRECTS = 3;
+
 
 /** Blocked IP ranges (SSRF prevention) */
 const BLOCKED_PATTERNS = [

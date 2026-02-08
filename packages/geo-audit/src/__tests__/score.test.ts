@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { getGrade, calculateScore, buildRecommendations } from "../score.js";
+import { allRules } from "../rules/index.js";
 import type { RuleResult } from "../types.js";
 
 describe("Scoring", () => {
@@ -48,6 +49,37 @@ describe("Scoring", () => {
         { id: "R02", name: "T", description: "T", category: "c", status: "pass", score: 5, maxScore: 5, message: "" },
       ];
       expect(calculateScore(results)).toBe(100);
+    });
+
+    it("verifies normalization with all real rules", () => {
+      // Simulate getting full score on every rule
+      const fullScoreResults: RuleResult[] = allRules.map(rule => ({
+        id: rule.id,
+        name: rule.name,
+        description: rule.description,
+        category: rule.category,
+        status: "pass",
+        score: rule.maxScore,
+        maxScore: rule.maxScore,
+        message: "Perfect",
+      }));
+      
+      expect(calculateScore(fullScoreResults)).toBe(100);
+
+      // Simulate getting 50% score on every rule
+      const halfScoreResults: RuleResult[] = allRules.map(rule => ({
+        id: rule.id,
+        name: rule.name,
+        description: rule.description,
+        category: rule.category,
+        status: "warn",
+        score: rule.maxScore / 2, // Assuming all maxScores are divisible by 2 or floats handled
+        maxScore: rule.maxScore,
+        message: "Half",
+      }));
+      
+      // calculateScore rounds to nearest integer
+      expect(calculateScore(halfScoreResults)).toBe(50);
     });
   });
 

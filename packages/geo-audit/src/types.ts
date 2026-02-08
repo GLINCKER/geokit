@@ -45,6 +45,7 @@ export interface Recommendation {
   rule: string;
   message: string;
   impact: number;
+  fix?: string;
 }
 
 /** Fetched page data passed to all rules */

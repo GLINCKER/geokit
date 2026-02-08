@@ -8,6 +8,10 @@ Generate GEO assets for AI discoverability — llms.txt, robots.txt, sitemap.xml
 
 **GeoSEO** is a framework-agnostic CLI and Node.js library that auto-generates the files AI crawlers look for — `llms.txt`, `robots.txt` with AI crawler rules, `sitemap.xml`, and `JSON-LD` structured data. Define your pages in one config file, generate everything at build time. Zero runtime overhead.
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/glincker/geokit/main/assets/geo-seo-demo.gif" alt="geo-seo demo" width="800">
+</p>
+
 ## Installation
 
 ```bash
@@ -260,6 +264,50 @@ Run GeoSEO as part of your build:
 
 - name: Verify GEO score
   run: npx @glincker/geo-audit https://yourdomain.com --fail-under 80
+```
+
+## Framework Adapters
+
+GeoSEO integrates with popular frameworks via subpath exports — no extra packages needed:
+
+### Next.js
+
+```typescript
+// next.config.ts
+import { withGeoSEO } from '@glincker/geo-seo/next';
+export default withGeoSEO(geoConfig)({ reactStrictMode: true });
+```
+
+### Vite (Vue / Svelte / Remix / SolidStart)
+
+```typescript
+// vite.config.ts
+import { geoSeoPlugin } from '@glincker/geo-seo/vite';
+export default defineConfig({ plugins: [geoSeoPlugin(geoConfig)] });
+```
+
+### Astro
+
+```typescript
+// astro.config.mjs
+import { geoSeoIntegration } from '@glincker/geo-seo/astro';
+export default defineConfig({ integrations: [geoSeoIntegration(geoConfig)] });
+```
+
+### Nuxt
+
+```typescript
+// nuxt.config.ts
+import { geoSeoModule } from '@glincker/geo-seo/nuxt';
+export default defineNuxtConfig({ modules: [geoSeoModule(geoConfig)] });
+```
+
+All adapters also export `getJsonLdScript()` for page-level JSON-LD generation:
+
+```typescript
+import { getJsonLdScript } from '@glincker/geo-seo/vite'; // or /next, /astro, /nuxt
+const jsonLd = getJsonLdScript('WebPage', geoConfig, page);
+// Use in <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
 ```
 
 ## How It Connects to GeoKit

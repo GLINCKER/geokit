@@ -8,6 +8,10 @@ Convert any URL to clean markdown with metadata — built for LLM context window
 
 **Geomark** is a CLI and Node.js library that fetches any web page, strips the noise (nav, footer, ads, cookie banners), and returns clean markdown plus structured metadata. Includes token estimation for LLM developers building RAG pipelines.
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/glincker/geokit/main/assets/geomark-demo.gif" alt="geomark demo" width="800">
+</p>
+
 ## Installation
 
 ```bash

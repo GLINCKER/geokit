@@ -107,4 +107,24 @@ describe("extractMetadata", () => {
     expect(meta.author).toBe("");
     expect(meta.canonical).toBe("");
   });
+  it("extracts metadata from article tags", () => {
+    const html = `
+      <html><head>
+        <meta property="article:published_time" content="2025-01-01">
+        <meta property="article:author" content="Writer">
+        <meta property="article:section" content="Tech">
+      </head><body></body></html>
+    `;
+    const meta = extractMetadata(html);
+    expect(meta.published).toBe("2025-01-01");
+    expect(meta.author).toBe("Writer");
+    // section goes into openGraph bucket
+    expect(meta.openGraph["article:section"]).toBe("Tech");
+  });
+
+  it("uses h1 as title fallback if title tag missing", () => {
+    const html = `<html><head></head><body><h1>Header Title</h1></body></html>`;
+    const meta = extractMetadata(html);
+    expect(meta.title).toBe("Header Title");
+  });
 });

@@ -7,6 +7,19 @@ on:
     branches: [main, develop]
 
 jobs:
+  commitlint:
+    name: Lint Commit Messages
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: wagoid/commitlint-github-action@v6
+        with:
+          configFile: commitlint.config.js
+
   test:
     name: Test (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
@@ -39,16 +52,16 @@ jobs:
 
       - name: Check package sizes
         run: |
-          for pkg in geo-audit geo-seo geomark; do
+          for pkg in geo-audit geo-seo geomark geokit; do
             echo "--- $pkg ---"
             cd packages/$pkg
             OUTPUT=$(npm pack --dry-run 2>&1)
             echo "$OUTPUT"
             SIZE=$(echo "$OUTPUT" | grep "package size" | awk '{print $NF}' | sed 's/kB//')
             if (( $(echo "$SIZE > 100" | bc -l) )); then
-              echo "❌ $pkg size ($SIZE kB) exceeds 100 kB limit"
+              echo "--- $pkg size ($SIZE kB) exceeds 100 kB limit"
               exit 1
             fi
-            echo "✅ $pkg size ($SIZE kB) is within limits"
+            echo "--- $pkg size ($SIZE kB) is within limits"
             cd ../..
           done

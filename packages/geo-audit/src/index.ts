@@ -11,3 +11,5 @@ export type {
   PageData,
   FetchResult,
 } from "./types.js";
+export { getFixSuggestion } from "./fixes.js";
+export type { FixSuggestion } from "./fixes.js";

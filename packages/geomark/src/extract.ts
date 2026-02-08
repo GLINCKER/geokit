@@ -18,6 +18,9 @@ const BLOCKED_PATTERNS = [
 ];
 
 function isBlockedHost(hostname: string): boolean {
+  if (process.env.GEOMARK_ALLOW_LOCAL === "1" || process.env.NODE_ENV === "test-local") {
+    return false;
+  }
   return BLOCKED_PATTERNS.some((p) => p.test(hostname));
 }
 

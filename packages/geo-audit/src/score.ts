@@ -4,6 +4,7 @@ import type {
   RuleResult,
   Recommendation,
 } from "./types.js";
+import { getFixSuggestion } from "./fixes.js";
 
 /** Category definitions with max points */
 const CATEGORY_DEFS = [
@@ -13,8 +14,7 @@ const CATEGORY_DEFS = [
   { name: "Technical AI-Readiness", slug: "technical", maxPoints: 21 },
 ] as const;
 
-/** Map rule category slug to definition */
-const categoryMap = new Map(CATEGORY_DEFS.map((c) => [c.slug, c]));
+
 
 /** Calculate letter grade from 0-100 score */
 export function getGrade(score: number): Grade {
@@ -52,10 +52,14 @@ export function calculateScore(results: RuleResult[]): number {
 export function buildRecommendations(results: RuleResult[]): Recommendation[] {
   return results
     .filter((r) => r.status !== "pass" && r.status !== "skip" && r.recommendation)
-    .map((r) => ({
-      rule: r.id,
-      message: r.recommendation!,
-      impact: r.maxScore - r.score,
-    }))
+    .map((r) => {
+      const fix = getFixSuggestion(r.id);
+      return {
+        rule: r.id,
+        message: r.recommendation!,
+        impact: r.maxScore - r.score,
+        ...(fix && { fix: fix.command }),
+      };
+    })
     .sort((a, b) => b.impact - a.impact);
 }

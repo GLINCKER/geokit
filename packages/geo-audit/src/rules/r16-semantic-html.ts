@@ -54,7 +54,7 @@ export const r16SemanticHtml: Rule = {
         status: "warn",
         score: 3,
         maxScore: this.maxScore,
-        message: `Limited semantic HTML: ${elementList || "none"}`,
+        message: `Limited semantic HTML: ${elementList}`,
         recommendation:
           "Use more semantic HTML5 elements (main, article, section, nav, aside, header, footer) to improve content structure for AI parsing and accessibility.",
         details: { semanticElements: Array.from(foundElements), count },

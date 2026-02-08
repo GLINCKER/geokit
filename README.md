@@ -7,6 +7,7 @@
   <a href="https://www.npmjs.com/package/@glincker/geo-audit"><img src="https://img.shields.io/npm/v/@glincker/geo-audit.svg?label=geo-audit" alt="npm version"></a>
   <a href="https://www.npmjs.com/package/@glincker/geo-seo"><img src="https://img.shields.io/npm/v/@glincker/geo-seo.svg?label=geo-seo" alt="npm version"></a>
   <a href="https://www.npmjs.com/package/@glincker/geomark"><img src="https://img.shields.io/npm/v/@glincker/geomark.svg?label=geomark" alt="npm version"></a>
+  <a href="https://www.npmjs.com/package/@glincker/geokit"><img src="https://img.shields.io/npm/v/@glincker/geokit.svg?label=geokit" alt="npm version"></a>
   <a href="https://github.com/glincker/geokit/actions"><img src="https://github.com/glincker/geokit/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
 </p>
@@ -17,6 +18,10 @@ GeoKit is a suite of developer tools for **Generative Engine Optimization (GEO)*
 
 Traditional SEO focused on ranking. GEO focuses on **being cited** in AI-generated answers.
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/glincker/geokit/main/assets/demo.gif" alt="GeoKit Demo" width="800">
+</p>
+
 ## Packages
 
 | Package | Description | Status |
@@ -24,15 +29,16 @@ Traditional SEO focused on ranking. GEO focuses on **being cited** in AI-generat
 | [`@glincker/geo-audit`](./packages/geo-audit) | CLI that scores any website's AI-readiness 0-100 | Published |
 | [`@glincker/geo-seo`](./packages/geo-seo) | Generate llms.txt, JSON-LD, robots.txt, sitemap for AI discoverability | Published |
 | [`@glincker/geomark`](./packages/geomark) | Convert any URL to clean markdown with metadata | Published |
+| [`@glincker/geokit`](./packages/geokit) | Unified CLI + auto-fix pipeline | Published |
 
-### Framework Adapters (planned — subpath exports in `@glincker/geo-seo`)
+### Framework Adapters (subpath exports in `@glincker/geo-seo`)
 
 | Import | Framework |
 |--------|-----------|
 | `@glincker/geo-seo/next` | Next.js |
+| `@glincker/geo-seo/vite` | Vite / Vue / Svelte / Remix / SolidStart |
 | `@glincker/geo-seo/astro` | Astro |
 | `@glincker/geo-seo/nuxt` | Nuxt |
-| `@glincker/geo-seo/vite` | Vue / Svelte / Remix / SolidStart |
 
 ## Quick Start
 
@@ -97,7 +103,7 @@ git clone https://github.com/glincker/geokit.git
 cd geokit
 npm install
 npm run build    # Build all packages
-npm run test     # Run all tests (221 passing)
+npm run test     # Run all tests (311 passing)
 ```
 
 ## Contributing

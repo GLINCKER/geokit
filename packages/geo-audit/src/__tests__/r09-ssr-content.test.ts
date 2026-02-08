@@ -29,5 +29,16 @@ describe("R09: Content Accessibility (SSR)", () => {
     const result = r09SsrContent.check(page);
     expect(result.status).toBe("fail");
     expect(result.score).toBe(0);
+    expect(result.message).toContain("client-side rendered");
+  });
+
+  it("fails with extremely minimal content (not necessarily JS)", () => {
+    const page = mockPage({
+      html: "<html><body><p>Hi</p></body></html>",
+    });
+    const result = r09SsrContent.check(page);
+    expect(result.status).toBe("fail");
+    expect(result.score).toBe(0);
+    expect(result.message).toContain("Very little text content");
   });
 });

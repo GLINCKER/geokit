@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -40,31 +41,66 @@ jobs:
           cache: npm
           registry-url: https://registry.npmjs.org
 
+      - name: Upgrade npm for OIDC support
+        run: npm install -g npm@latest
+
       - run: npm ci
       - run: npx turbo run build
 
+      - name: Extract version from tag
+        id: version
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            echo "version=${GITHUB_REF#refs/tags/v}" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=$(node -p "require('./packages/geo-audit/package.json').version")" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Publish @glincker/geo-audit
         working-directory: packages/geo-audit
-        run: npm publish --provenance --access public || echo "Already published or no changes"
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          VERSION=${{ steps.version.outputs.version }}
+          if npm view @glincker/geo-audit@$VERSION version 2>/dev/null; then
+            echo "Version $VERSION already exists, skipping"
+          else
+            npm publish --provenance --access public
+          fi
 
       - name: Publish @glincker/geo-seo
         working-directory: packages/geo-seo
-        run: npm publish --provenance --access public || echo "Already published or no changes"
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          VERSION=${{ steps.version.outputs.version }}
+          if npm view @glincker/geo-seo@$VERSION version 2>/dev/null; then
+            echo "Version $VERSION already exists, skipping"
+          else
+            npm publish --provenance --access public
+          fi
 
       - name: Publish @glincker/geomark
         working-directory: packages/geomark
-        run: npm publish --provenance --access public || echo "Already published or no changes"
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          VERSION=${{ steps.version.outputs.version }}
+          if npm view @glincker/geomark@$VERSION version 2>/dev/null; then
+            echo "Version $VERSION already exists, skipping"
+          else
+            npm publish --provenance --access public
+          fi
+
+      - name: Publish @glincker/geokit
+        working-directory: packages/geokit
+        run: |
+          VERSION=${{ steps.version.outputs.version }}
+          if npm view @glincker/geokit@$VERSION version 2>/dev/null; then
+            echo "Version $VERSION already exists, skipping"
+          else
+            npm publish --provenance --access public
+          fi
 
   github-release:
     name: GitHub Release
     needs: publish
     runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
     steps:
       - uses: actions/checkout@v4
 

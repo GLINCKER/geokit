@@ -8,6 +8,10 @@ Audit any website's AI-readiness. Get a score 0-100.
 
 **GeoAudit** is a professional CLI tool that evaluates how well your website is optimized for AI crawlers and generative engines like ChatGPT, Claude, Perplexity, and Google AI Overviews. Get actionable recommendations to improve your GEO (Generative Engine Optimization) strategy.
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/glincker/geokit/main/assets/geo-audit-demo.gif" alt="geo-audit demo" width="800">
+</p>
+
 ## Installation
 
 ```bash
@@ -178,7 +182,7 @@ geo-audit https://example.com --json
 | `--json` | `-j` | Output results as JSON instead of formatted text |
 | `--verbose` | | Show detailed information for each rule |
 | `--quiet` | `-q` | Only show score and grade (minimal output) |
-| `--fail-under <n>` | | Exit with code 1 if score is below threshold (useful for CI/CD) |
+| `--fail-under <n>` | | Exit with code 2 if score is below threshold (useful for CI/CD) |
 | `--timeout <ms>` | | Set HTTP request timeout in milliseconds (default: 10000) |
 | `--no-recommendations` | | Hide the recommendations section from output |
 | `--insecure` | | Skip SSL certificate verification |

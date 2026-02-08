@@ -197,6 +197,9 @@ function printResult(result: AuditResult, flags: CliFlags): void {
       console.log(
         `  ${chalk.cyan(`${i + 1}.`)} ${rec.message} ${chalk.dim(`(+${rec.impact} points)`)}`
       );
+      if (rec.fix) {
+        console.log(`     ${chalk.yellow(`💡 Fix: ${rec.fix}`)}`);
+      }
     }
   }
 

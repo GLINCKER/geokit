@@ -42,30 +42,30 @@ export function extractMetadata(html: string): PageMetadata {
 
   // Title extraction priority: og:title > <title> > h1
   const title =
-    openGraph["title"] ??
-    $("title").first().text().trim() ??
-    $("h1").first().text().trim() ??
+    openGraph["title"] ||
+    $("title").first().text().trim() ||
+    $("h1").first().text().trim() ||
     "";
 
   // Description: og:description > meta description
   const description =
-    openGraph["description"] ??
-    $('meta[name="description"]').attr("content")?.trim() ??
+    openGraph["description"] ||
+    $('meta[name="description"]').attr("content")?.trim() ||
     "";
 
   // Author: article:author > meta author > JSON-LD author
   const jsonLdAuthor = jsonLd ? (jsonLd["author"] as string | undefined) : undefined;
   const author =
-    openGraph["article:author"] ??
-    $('meta[name="author"]').attr("content")?.trim() ??
-    jsonLdAuthor ??
+    openGraph["article:author"] ||
+    $('meta[name="author"]').attr("content")?.trim() ||
+    jsonLdAuthor ||
     "";
 
   // Published date: article:published_time > datePublished in JSON-LD
   const jsonLdDate = jsonLd ? (jsonLd["datePublished"] as string | undefined) : undefined;
   const published =
-    openGraph["article:published_time"] ??
-    jsonLdDate ??
+    openGraph["article:published_time"] ||
+    jsonLdDate ||
     "";
 
   // Canonical URL

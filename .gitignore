@@ -28,3 +28,7 @@ yarn-debug.log*
 
 # Turbo
 .turbo/
+
+# AI assistant config (local only)
+CLAUDE.md
+.claude/

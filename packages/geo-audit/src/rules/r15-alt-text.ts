@@ -14,7 +14,7 @@ export const r15AltText: Rule = {
     const images = $("img");
 
     // Filter out decorative images first
-    const contentImages: cheerio.Cheerio<cheerio.Element>[] = [];
+    const contentImages: any[] = [];
     images.each((_, el) => {
       const $el = $(el);
       const role = $el.attr("role");
@@ -25,9 +25,7 @@ export const r15AltText: Rule = {
       }
     });
 
-    const totalImages = contentImages.length;
-
-    if (totalImages === 0) {
+    if (contentImages.length === 0) {
       return {
         id: this.id,
         name: this.name,
@@ -51,7 +49,7 @@ export const r15AltText: Rule = {
       }
     });
 
-    const percentage = Math.round((imagesWithAlt / totalImages) * 100);
+    const percentage = Math.round((imagesWithAlt / contentImages.length) * 100);
 
     if (percentage >= 90) {
       return {
@@ -62,8 +60,8 @@ export const r15AltText: Rule = {
         status: "pass",
         score: 5,
         maxScore: this.maxScore,
-        message: `${imagesWithAlt} of ${totalImages} images have alt text (${percentage}%)`,
-        details: { totalImages, imagesWithAlt, percentage },
+        message: `${imagesWithAlt} of ${contentImages.length} images have alt text (${percentage}%)`,
+        details: { totalImages: contentImages.length, imagesWithAlt, percentage },
       };
     }
 
@@ -76,10 +74,10 @@ export const r15AltText: Rule = {
         status: "warn",
         score: 3,
         maxScore: this.maxScore,
-        message: `Only ${imagesWithAlt} of ${totalImages} images have alt text (${percentage}%)`,
+        message: `Only ${imagesWithAlt} of ${contentImages.length} images have alt text (${percentage}%)`,
         recommendation:
           "Add descriptive alt text to all images. Alt text helps screen readers, SEO, and AI systems understand your images.",
-        details: { totalImages, imagesWithAlt, percentage },
+        details: { totalImages: contentImages.length, imagesWithAlt, percentage },
       };
     }
 
@@ -91,10 +89,10 @@ export const r15AltText: Rule = {
       status: "fail",
       score: 0,
       maxScore: this.maxScore,
-      message: `Only ${imagesWithAlt} of ${totalImages} images have alt text (${percentage}%)`,
+      message: `Only ${imagesWithAlt} of ${contentImages.length} images have alt text (${percentage}%)`,
       recommendation:
         "Add descriptive alt text to all images. This is critical for accessibility and helps AI systems understand your content.",
-      details: { totalImages, imagesWithAlt, percentage },
+      details: { totalImages: contentImages.length, imagesWithAlt, percentage },
     };
   },
 };

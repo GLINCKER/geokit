@@ -3,7 +3,7 @@ import { r18RssFeed } from "../rules/r18-rss-feed.js";
 import { mockPage } from "./helpers.js";
 
 describe("R18: RSS/Atom Feed Detection", () => {
-  it("passes when RSS feed link is found", () => {
+  it("passes when RSS feed link is found", async () => {
     const page = mockPage({
       html: `<!DOCTYPE html>
 <html>
@@ -13,13 +13,13 @@ describe("R18: RSS/Atom Feed Detection", () => {
 <body></body>
 </html>`,
     });
-    const result = r18RssFeed.check(page);
+    const result = await r18RssFeed.check(page);
     expect(result.status).toBe("pass");
     expect(result.score).toBe(5);
     expect(result.message).toContain("RSS");
   });
 
-  it("passes when Atom feed link is found", () => {
+  it("passes when Atom feed link is found", async () => {
     const page = mockPage({
       html: `<!DOCTYPE html>
 <html>
@@ -29,13 +29,13 @@ describe("R18: RSS/Atom Feed Detection", () => {
 <body></body>
 </html>`,
     });
-    const result = r18RssFeed.check(page);
+    const result = await r18RssFeed.check(page);
     expect(result.status).toBe("pass");
     expect(result.score).toBe(5);
     expect(result.message).toContain("Atom");
   });
 
-  it("passes with multiple feed types", () => {
+  it("passes with multiple feed types", async () => {
     const page = mockPage({
       html: `<!DOCTYPE html>
 <html>
@@ -46,14 +46,14 @@ describe("R18: RSS/Atom Feed Detection", () => {
 <body></body>
 </html>`,
     });
-    const result = r18RssFeed.check(page);
+    const result = await r18RssFeed.check(page);
     expect(result.status).toBe("pass");
     expect(result.score).toBe(5);
     expect(result.message).toContain("RSS");
     expect(result.message).toContain("Atom");
   });
 
-  it("passes with multiple RSS feeds", () => {
+  it("passes with multiple RSS feeds", async () => {
     const page = mockPage({
       html: `<!DOCTYPE html>
 <html>
@@ -64,13 +64,13 @@ describe("R18: RSS/Atom Feed Detection", () => {
 <body></body>
 </html>`,
     });
-    const result = r18RssFeed.check(page);
+    const result = await r18RssFeed.check(page);
     expect(result.status).toBe("pass");
     expect(result.score).toBe(5);
     expect(result.message).toContain("RSS (2)");
   });
 
-  it("warns when feed link has wrong type", () => {
+  it("warns when feed link has wrong type", async () => {
     const page = mockPage({
       html: `<!DOCTYPE html>
 <html>
@@ -80,13 +80,13 @@ describe("R18: RSS/Atom Feed Detection", () => {
 <body></body>
 </html>`,
     });
-    const result = r18RssFeed.check(page);
+    const result = await r18RssFeed.check(page);
     expect(result.status).toBe("warn");
     expect(result.score).toBe(2);
     expect(result.message).toContain("missing or incorrect type");
   });
 
-  it("warns when feed link has no type attribute", () => {
+  it("warns when feed link has no type attribute", async () => {
     const page = mockPage({
       html: `<!DOCTYPE html>
 <html>
@@ -96,12 +96,12 @@ describe("R18: RSS/Atom Feed Detection", () => {
 <body></body>
 </html>`,
     });
-    const result = r18RssFeed.check(page);
+    const result = await r18RssFeed.check(page);
     expect(result.status).toBe("warn");
     expect(result.score).toBe(2);
   });
 
-  it("fails when no feed link found", () => {
+  it("fails when no feed link found", async () => {
     const page = mockPage({
       html: `<!DOCTYPE html>
 <html>
@@ -111,13 +111,13 @@ describe("R18: RSS/Atom Feed Detection", () => {
 <body></body>
 </html>`,
     });
-    const result = r18RssFeed.check(page);
+    const result = await r18RssFeed.check(page);
     expect(result.status).toBe("fail");
     expect(result.score).toBe(0);
     expect(result.message).toContain("No feed link found");
   });
 
-  it("fails when rel=alternate exists but for other purposes", () => {
+  it("fails when rel=alternate exists but for other purposes", async () => {
     const page = mockPage({
       html: `<!DOCTYPE html>
 <html>
@@ -127,8 +127,25 @@ describe("R18: RSS/Atom Feed Detection", () => {
 <body></body>
 </html>`,
     });
-    const result = r18RssFeed.check(page);
+    const result = await r18RssFeed.check(page);
     expect(result.status).toBe("warn");
     expect(result.score).toBe(2);
+  });
+
+  it("fails when link rel=alternate exists but lacks href attribute", async () => {
+    const page = mockPage({
+      html: `<!DOCTYPE html>
+<html>
+<head>
+  <link rel="alternate" type="application/rss+xml">
+</head>
+<body></body>
+</html>`,
+    });
+    const result = await r18RssFeed.check(page);
+    expect(result.status).toBe("fail");
+    expect(result.score).toBe(0);
+    // Implementation returns "No valid feed link found" in the last return statement
+    expect(result.message).toContain("No valid feed link found");
   });
 });

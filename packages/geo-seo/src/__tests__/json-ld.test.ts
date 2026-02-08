@@ -48,6 +48,25 @@ describe("generateJsonLd", () => {
       expect(result.sameAs).toEqual(["https://twitter.com/test", "https://github.com/test"]);
     });
 
+    it("includes contactPoint when provided", () => {
+      const result = generateJsonLd("Organization", makeConfig({
+        organization: {
+          name: "Test Corp",
+          url: "https://example.com",
+          contactPoint: {
+            type: "CustomerService",
+            telephone: "+1-800-555-5555",
+            email: "support@example.com",
+          },
+        },
+      }));
+      expect(result.contactPoint).toEqual({
+        "@type": "CustomerService",
+        telephone: "+1-800-555-5555",
+        email: "support@example.com",
+      });
+    });
+
     it("falls back to site info when no organization", () => {
       const result = generateJsonLd("Organization", makeConfig({ organization: undefined }));
       expect(result.name).toBe("Test Site");
@@ -169,6 +188,14 @@ describe("generateJsonLd", () => {
       const result = generateJsonLd("BreadcrumbList", makeConfig(), page);
       const items = result.itemListElement as Array<Record<string, unknown>>;
       expect(items).toHaveLength(1);
+    });
+
+    it("capitalizes breadcrumb names correctly", () => {
+      const page = { path: "/my-category/sub-item", title: "Sub Item", description: "Desc" };
+      const result = generateJsonLd("BreadcrumbList", makeConfig(), page);
+      const items = result.itemListElement as Array<Record<string, unknown>>;
+      expect(items[1]!.name).toBe("My category"); // capitalize logic check
+      expect(items[2]!.name).toBe("Sub Item"); // page title used for last item
     });
   });
 });
