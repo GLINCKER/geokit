@@ -1,0 +1,81 @@
+{
+  "name": "@glincker/geomark",
+  "version": "0.1.0",
+  "description": "Convert any URL to clean markdown with metadata — URL to readable content for LLM context windows.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "geomark": "dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.cjs",
+    "dist/**/*.d.ts",
+    "dist/**/*.d.cts",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist coverage"
+  },
+  "keywords": [
+    "markdown",
+    "url-to-markdown",
+    "readability",
+    "content-extraction",
+    "html-to-markdown",
+    "llm",
+    "ai",
+    "geo",
+    "web-scraping",
+    "metadata"
+  ],
+  "author": "Glincker <hello@glincker.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/glincker/geokit",
+    "directory": "packages/geomark"
+  },
+  "homepage": "https://geo.glincker.com",
+  "bugs": {
+    "url": "https://github.com/glincker/geokit/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "chalk": "^5.4.0",
+    "cheerio": "^1.0.0",
+    "@mozilla/readability": "^0.5.0",
+    "turndown": "^7.2.0",
+    "linkedom": "^0.18.0"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.0",
+    "vitest": "^2.1.0",
+    "@types/node": "^22.0.0",
+    "@types/turndown": "^5.0.5"
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "name": "@glincker/geo-seo",
+  "version": "0.1.0",
+  "description": "Framework-agnostic GEO asset generator — llms.txt, JSON-LD, robots.txt, and sitemap for AI discoverability.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "geo-seo": "dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.cjs",
+    "dist/**/*.d.ts",
+    "dist/**/*.d.cts",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist coverage"
+  },
+  "keywords": [
+    "geo",
+    "seo",
+    "ai",
+    "llms-txt",
+    "json-ld",
+    "robots-txt",
+    "sitemap",
+    "generative-engine-optimization",
+    "ai-seo",
+    "schema-org",
+    "structured-data"
+  ],
+  "author": "Glincker <hello@glincker.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/glincker/geokit",
+    "directory": "packages/geo-seo"
+  },
+  "homepage": "https://geo.glincker.com",
+  "bugs": {
+    "url": "https://github.com/glincker/geokit/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "chalk": "^5.4.0"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.0",
+    "vitest": "^2.1.0",
+    "@types/node": "^22.0.0"
+  }
+}
