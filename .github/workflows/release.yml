@@ -42,7 +42,7 @@ jobs:
       - run: npm ci
       - run: npx turbo run build
 
-      - name: Publish geo-audit
+      - name: Publish @glincker/geo-audit
         working-directory: packages/geo-audit
         run: npm publish --provenance --access public
         env:

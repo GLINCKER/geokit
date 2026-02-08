@@ -1,21 +1,21 @@
-# geo-audit
+# GeoAudit
 
 Audit any website's AI-readiness. Get a score 0-100.
 
-[![npm version](https://img.shields.io/npm/v/geo-audit.svg)](https://www.npmjs.com/package/geo-audit)
+[![npm version](https://img.shields.io/npm/v/@glincker/geo-audit.svg)](https://www.npmjs.com/package/@glincker/geo-audit)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![GitHub stars](https://img.shields.io/github/stars/glincker/geokit.svg)](https://github.com/glincker/geokit)
 
-**geo-audit** is a professional CLI tool that evaluates how well your website is optimized for AI crawlers and generative engines like ChatGPT, Claude, Perplexity, and Google AI Overviews. Get actionable recommendations to improve your GEO (Generative Engine Optimization) strategy.
+**GeoAudit** is a professional CLI tool that evaluates how well your website is optimized for AI crawlers and generative engines like ChatGPT, Claude, Perplexity, and Google AI Overviews. Get actionable recommendations to improve your GEO (Generative Engine Optimization) strategy.
 
 ## Installation
 
 ```bash
 # Install globally
-npm install -g geo-audit
+npm install -g @glincker/geo-audit
 
 # Or use with npx (no installation)
-npx geo-audit https://example.com
+npx @glincker/geo-audit https://example.com
 ```
 
 ## Quick Start
@@ -77,7 +77,7 @@ Powered by GeoKit — geo.glincker.com
 
 ## Audit Rules
 
-geo-audit evaluates **20 rules** across 4 categories:
+GeoAudit evaluates **20 rules** across 4 categories:
 
 | ID | Rule Name | Category | Max Points |
 |----|-----------|----------|------------|
@@ -144,7 +144,7 @@ geo-audit https://example.com --json
     {
       "name": "AI Discoverability",
       "slug": "discoverability",
-      "maxPoints": 30,
+      "maxPoints": 40,
       "score": 15,
       "rules": [...]
     }
@@ -188,10 +188,10 @@ geo-audit https://example.com --json
 
 ## Programmatic API
 
-Use geo-audit in your Node.js projects:
+Use GeoAudit in your Node.js projects:
 
 ```typescript
-import { audit } from 'geo-audit';
+import { audit } from '@glincker/geo-audit';
 
 const result = await audit('https://example.com', {
   timeout: 10000,
@@ -219,7 +219,7 @@ interface AuditOptions {
 
 ## CI/CD Integration
 
-Use geo-audit in your CI/CD pipeline to enforce AI-readiness standards:
+Use GeoAudit in your CI/CD pipeline to enforce AI-readiness standards:
 
 ```yaml
 # .github/workflows/geo-audit.yml
@@ -242,7 +242,7 @@ jobs:
           node-version: '18'
 
       - name: Run GEO Audit
-        run: npx geo-audit https://yourdomain.com --fail-under 70
+        run: npx @glincker/geo-audit https://yourdomain.com --fail-under 70
 ```
 
 This will fail the build if your site scores below 70/100.
@@ -255,7 +255,7 @@ According to Gartner, **94% of CMOs are increasing their GEO budget** in 2025. A
 - **Google AI Overviews** are displayed in 15%+ of search results
 - **AI crawlers** use different signals than traditional SEO (structured data, llms.txt, response time)
 
-Traditional SEO focused on ranking. GEO focuses on **being cited** in AI-generated answers. geo-audit helps you optimize for this new paradigm.
+Traditional SEO focused on ranking. GEO focuses on **being cited** in AI-generated answers. GeoAudit helps you optimize for this new paradigm.
 
 ## What's Next?
 
@@ -279,7 +279,7 @@ MIT License - see [LICENSE](../../LICENSE) for details.
 - **Website**: [geo.glincker.com](https://geo.glincker.com)
 - **GitHub**: [github.com/glincker/geokit](https://github.com/glincker/geokit)
 - **Issues**: [github.com/glincker/geokit/issues](https://github.com/glincker/geokit/issues)
-- **npm**: [npmjs.com/package/geo-audit](https://www.npmjs.com/package/geo-audit)
+- **npm**: [npmjs.com/package/@glincker/geo-audit](https://www.npmjs.com/package/@glincker/geo-audit)
 
 ---
 

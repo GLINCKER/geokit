@@ -46,7 +46,7 @@ We believe in recognizing security researchers for their contributions:
 ### Scope
 
 This security policy applies to:
-- The `geo-audit` CLI package
+- The `@glincker/geo-audit` CLI package
 - Any hosted services at `geo.glincker.com`
 - Supporting infrastructure and APIs
 

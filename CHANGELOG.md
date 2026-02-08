@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2026-02-07
 
 ### Added
-- Initial release of `geo-audit` CLI
+- Initial release of `@glincker/geo-audit` CLI
 - 20 audit rules across 4 categories:
   - **AI Discoverability** (R01-R03, R18-R19): llms.txt, robots.txt AI rules, sitemap.xml, RSS/Atom feeds, llms.txt quality
   - **Structured Data** (R04-R07, R17): JSON-LD, OpenGraph, meta description, canonical URL, identity schema
