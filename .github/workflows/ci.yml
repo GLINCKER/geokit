@@ -37,14 +37,18 @@ jobs:
       - name: Build packages
         run: npx turbo run build
 
-      - name: Check package size
+      - name: Check package sizes
         run: |
-          cd packages/geo-audit
-          OUTPUT=$(npm pack --dry-run 2>&1)
-          echo "$OUTPUT"
-          SIZE=$(echo "$OUTPUT" | grep "package size" | awk '{print $NF}' | sed 's/kB//')
-          if (( $(echo "$SIZE > 100" | bc -l) )); then
-            echo "❌ Package size ($SIZE kB) exceeds 100 kB limit"
-            exit 1
-          fi
-          echo "✅ Package size ($SIZE kB) is within limits"
+          for pkg in geo-audit geo-seo geomark; do
+            echo "--- $pkg ---"
+            cd packages/$pkg
+            OUTPUT=$(npm pack --dry-run 2>&1)
+            echo "$OUTPUT"
+            SIZE=$(echo "$OUTPUT" | grep "package size" | awk '{print $NF}' | sed 's/kB//')
+            if (( $(echo "$SIZE > 100" | bc -l) )); then
+              echo "❌ $pkg size ($SIZE kB) exceeds 100 kB limit"
+              exit 1
+            fi
+            echo "✅ $pkg size ($SIZE kB) is within limits"
+            cd ../..
+          done

@@ -25,16 +25,14 @@ Traditional SEO focused on ranking. GEO focuses on **being cited** in AI-generat
 | [`@glincker/geo-seo`](./packages/geo-seo) | Generate llms.txt, JSON-LD, robots.txt, sitemap for AI discoverability | Published |
 | [`@glincker/geomark`](./packages/geomark) | Convert any URL to clean markdown with metadata | Published |
 
-### Framework Adapters (planned)
+### Framework Adapters (planned — subpath exports in `@glincker/geo-seo`)
 
-| Package | Framework |
-|---------|-----------|
-| `@glincker/geo-seo-next` | Next.js |
-| `@glincker/geo-seo-astro` | Astro |
-| `@glincker/geo-seo-nuxt` | Nuxt |
-| `@glincker/geo-seo-vue` | Vue / Vite |
-| `@glincker/geo-seo-angular` | Angular |
-| `@glincker/geo-seo-remix` | Remix |
+| Import | Framework |
+|--------|-----------|
+| `@glincker/geo-seo/next` | Next.js |
+| `@glincker/geo-seo/astro` | Astro |
+| `@glincker/geo-seo/nuxt` | Nuxt |
+| `@glincker/geo-seo/vite` | Vue / Svelte / Remix / SolidStart |
 
 ## Quick Start
 

@@ -30,6 +30,7 @@ jobs:
     name: Publish to npm
     needs: validate
     runs-on: ubuntu-latest
+    environment: npm-publish
     steps:
       - uses: actions/checkout@v4
 
@@ -44,7 +45,19 @@ jobs:
 
       - name: Publish @glincker/geo-audit
         working-directory: packages/geo-audit
-        run: npm publish --provenance --access public
+        run: npm publish --provenance --access public || echo "Already published or no changes"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish @glincker/geo-seo
+        working-directory: packages/geo-seo
+        run: npm publish --provenance --access public || echo "Already published or no changes"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish @glincker/geomark
+        working-directory: packages/geomark
+        run: npm publish --provenance --access public || echo "Already published or no changes"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
