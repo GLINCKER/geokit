@@ -101,5 +101,6 @@ export interface CliFlags {
   debug?: boolean;
   insecure?: boolean;
   noRecommendations?: boolean;
+  badge?: boolean;
   timeout?: number;
 }

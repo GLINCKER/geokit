@@ -43,6 +43,9 @@ function parseArgs(args: string[]): GeokitCliFlags {
       case "--insecure":
         flags.insecure = true;
         break;
+      case "--badge":
+        flags.badge = true;
+        break;
       case "--no-meta":
         flags.noMeta = true;
         break;
@@ -104,6 +107,7 @@ ${chalk.dim("OPTIONS")}
   ${chalk.cyan("--quiet, -q")}      Minimal output
   ${chalk.cyan("--only <type>")}    Generate only: llms-txt | robots-txt | sitemap | json-ld
   ${chalk.cyan("--config <path>")}  Path to geo-seo config file
+  ${chalk.cyan("--badge")}          Output badge snippets (audit only)
   ${chalk.cyan("--timeout <ms>")}   Override default fetch timeout
   ${chalk.cyan("--insecure")}       Skip SSL verification
   ${chalk.cyan("--no-meta")}        Skip metadata extraction (convert)
@@ -133,6 +137,19 @@ async function runAudit(flags: GeokitCliFlags): Promise<void> {
     insecure: flags.insecure,
     timeout: flags.timeout,
   });
+
+  if (flags.badge) {
+    const { formatBadge } = await import("@glincker/geo-audit");
+    const badge = formatBadge(result);
+    console.log(`\n${chalk.bold("Badge snippets for")} ${new URL(result.url).hostname}\n`);
+    console.log(`${chalk.dim("<!-- Dynamic badge (auto-updates daily) -->")}`);
+    console.log(`[![AI-Ready](${badge.dynamic})](https://geo.glincker.com)\n`);
+    console.log(`${chalk.dim("<!-- Static badge (current score) -->")}`);
+    console.log(`[![AI-Ready: ${result.score} (${result.grade})](${badge.static})](https://geo.glincker.com)\n`);
+    console.log(`${chalk.dim("<!-- HTML -->")}`);
+    console.log(badge.html);
+    return;
+  }
 
   if (flags.json) {
     console.log(JSON.stringify(result, null, 2));

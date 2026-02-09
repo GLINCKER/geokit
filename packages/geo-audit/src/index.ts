@@ -13,3 +13,5 @@ export type {
 } from "./types.js";
 export { getFixSuggestion } from "./fixes.js";
 export type { FixSuggestion } from "./fixes.js";
+export { formatBadge, gradeToColor } from "./badge.js";
+export type { BadgeSnippets } from "./badge.js";

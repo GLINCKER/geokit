@@ -2,6 +2,7 @@
 
 import chalk from "chalk";
 import { audit } from "./audit.js";
+import { formatBadge } from "./badge.js";
 import type { AuditResult, Category, CliFlags, RuleResult } from "./types.js";
 
 const VERSION = "0.1.0";
@@ -39,6 +40,9 @@ function parseArgs(args: string[]): CliFlags {
         break;
       case "--insecure":
         flags.insecure = true;
+        break;
+      case "--badge":
+        flags.badge = true;
         break;
       case "--no-recommendations":
       case "--no-recs":
@@ -93,6 +97,7 @@ ${chalk.dim("OPTIONS")}
   ${chalk.cyan("--fail-under <n>")}  Exit code 2 if score is below threshold
   ${chalk.cyan("--no-recommendations, --no-recs")}
                         Skip recommendations section
+  ${chalk.cyan("--badge")}           Output badge snippets (Markdown + HTML)
   ${chalk.cyan("--timeout <ms>")}    Override default 10s fetch timeout
   ${chalk.cyan("--insecure")}        Skip SSL verification
   ${chalk.cyan("--debug")}           Show debug information
@@ -269,6 +274,19 @@ async function main(): Promise<void> {
     clearInterval(spinnerInterval);
     spinnerInterval = null;
     process.stderr.write("\r" + " ".repeat(60) + "\r");
+
+    if (flags.badge) {
+      const badge = formatBadge(result);
+      console.log(`\n${chalk.bold("Badge snippets for")} ${new URL(result.url).hostname}\n`);
+      console.log(`${chalk.dim("<!-- Dynamic badge (auto-updates daily) -->")}`);
+      console.log(`[![AI-Ready](${badge.dynamic})](https://geo.glincker.com)\n`);
+      console.log(`${chalk.dim("<!-- Static badge (current score) -->")}`);
+      console.log(`[![AI-Ready: ${result.score} (${result.grade})](${badge.static})](https://geo.glincker.com)\n`);
+      console.log(`${chalk.dim("<!-- HTML -->")}`);
+      console.log(badge.html);
+      console.log();
+      return;
+    }
 
     if (flags.json) {
       console.log(JSON.stringify(result, null, 2));

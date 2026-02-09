@@ -1,0 +1,217 @@
+name: "GEO Audit — AI-Readiness Score"
+description: "Audit any website's AI-readiness. Scores 20 rules across discoverability, structured data, content quality, and technical readiness. Returns 0-100 score with A-F grade."
+author: "GLINCKER"
+
+branding:
+  icon: search
+  color: green
+
+inputs:
+  url:
+    description: "URL to audit (e.g. https://example.com)"
+    required: true
+  fail-under:
+    description: "Minimum score threshold — fail the step if score is below this value (0 = never fail)"
+    required: false
+    default: "0"
+  comment:
+    description: "Post score as a PR comment (requires pull_request trigger and write permissions)"
+    required: false
+    default: "false"
+  badge:
+    description: "Include badge markdown snippet in the output"
+    required: false
+    default: "false"
+  timeout:
+    description: "Fetch timeout in milliseconds"
+    required: false
+    default: "15000"
+  version:
+    description: "Specific @glincker/geo-audit version to use (default: latest)"
+    required: false
+    default: "latest"
+
+outputs:
+  score:
+    description: "Numeric score (0-100)"
+    value: ${{ steps.audit.outputs.score }}
+  grade:
+    description: "Letter grade (A, B, C, D, or F)"
+    value: ${{ steps.audit.outputs.grade }}
+  badge:
+    description: "Static shields.io badge URL for this score"
+    value: ${{ steps.audit.outputs.badge }}
+  result:
+    description: "Full JSON audit result"
+    value: ${{ steps.audit.outputs.result }}
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: "20"
+
+    - name: Run GEO Audit
+      id: audit
+      shell: bash
+      env:
+        INPUT_URL: ${{ inputs.url }}
+        INPUT_TIMEOUT: ${{ inputs.timeout }}
+        INPUT_VERSION: ${{ inputs.version }}
+        INPUT_FAIL_UNDER: ${{ inputs.fail-under }}
+        INPUT_BADGE: ${{ inputs.badge }}
+      run: |
+        set -euo pipefail
+
+        # Install and run audit
+        RESULT=$(npx --yes "@glincker/geo-audit@${INPUT_VERSION}" "${INPUT_URL}" --json --timeout "${INPUT_TIMEOUT}" 2>/dev/null) || {
+          echo "::error::Failed to audit ${INPUT_URL}. Check the URL is accessible."
+          exit 1
+        }
+
+        # Parse score and grade safely
+        SCORE=$(echo "$RESULT" | node -e "
+          const d = require('fs').readFileSync('/dev/stdin','utf8');
+          try { console.log(JSON.parse(d).score); }
+          catch { console.log('-1'); }
+        ")
+        GRADE=$(echo "$RESULT" | node -e "
+          const d = require('fs').readFileSync('/dev/stdin','utf8');
+          try { console.log(JSON.parse(d).grade); }
+          catch { console.log('?'); }
+        ")
+
+        if [ "$SCORE" = "-1" ] || [ "$GRADE" = "?" ]; then
+          echo "::error::Failed to parse audit result for ${INPUT_URL}"
+          exit 1
+        fi
+
+        # Grade → color mapping
+        case "$GRADE" in
+          A) COLOR="brightgreen"; EMOJI="🟢" ;;
+          B) COLOR="green";       EMOJI="🟢" ;;
+          C) COLOR="yellow";      EMOJI="🟡" ;;
+          D) COLOR="orange";      EMOJI="🟠" ;;
+          *)  COLOR="red";         EMOJI="🔴" ;;
+        esac
+
+        # Build static badge URL
+        BADGE_URL="https://img.shields.io/badge/AI--Ready-${SCORE}%20(${GRADE})-${COLOR}"
+
+        # Set outputs
+        echo "score=${SCORE}" >> "$GITHUB_OUTPUT"
+        echo "grade=${GRADE}" >> "$GITHUB_OUTPUT"
+        echo "badge=${BADGE_URL}" >> "$GITHUB_OUTPUT"
+
+        # Multiline JSON output
+        EOF_MARKER="EOF_$(head -c 15 /dev/urandom | base64 | tr -d '/+=')"
+        {
+          echo "result<<${EOF_MARKER}"
+          echo "$RESULT"
+          echo "${EOF_MARKER}"
+        } >> "$GITHUB_OUTPUT"
+
+        # Job Summary (always written — shows in Actions tab)
+        {
+          echo "## ${EMOJI} AI-Readiness Report"
+          echo ""
+          echo "| Metric | Value |"
+          echo "|--------|-------|"
+          echo "| **URL** | \`${INPUT_URL}\` |"
+          echo "| **Score** | **${SCORE}/100** |"
+          echo "| **Grade** | **${GRADE}** |"
+          echo ""
+          echo "![AI-Ready: ${SCORE} (${GRADE})](${BADGE_URL})"
+          echo ""
+
+          # Top recommendations from JSON
+          echo "$RESULT" | node -e "
+            const d = require('fs').readFileSync('/dev/stdin','utf8');
+            const j = JSON.parse(d);
+            const recs = j.recommendations || [];
+            if (recs.length > 0) {
+              console.log('### Top Recommendations');
+              console.log('');
+              recs.slice(0, 5).forEach((r, i) => {
+                console.log(\`\${i+1}. \${r.message} *(+\${r.impact} pts)*\`);
+              });
+              console.log('');
+            }
+          "
+
+          if [ "${INPUT_BADGE}" = "true" ]; then
+            echo "### Badge Snippet"
+            echo ""
+            echo "\`\`\`markdown"
+            echo "[![AI-Ready: ${SCORE} (${GRADE})](${BADGE_URL})](https://geo.glincker.com)"
+            echo "\`\`\`"
+            echo ""
+          fi
+
+          echo "---"
+          echo "*Powered by [GEO Audit](https://geo.glincker.com) — AI-Readiness scoring for the modern web*"
+        } >> "$GITHUB_STEP_SUMMARY"
+
+        # Console output
+        echo "${EMOJI} GEO Audit: ${INPUT_URL}"
+        echo "   Score: ${SCORE}/100 (${GRADE})"
+
+        # Threshold check
+        if [ "${INPUT_FAIL_UNDER}" -gt 0 ] 2>/dev/null && [ "${SCORE}" -lt "${INPUT_FAIL_UNDER}" ]; then
+          echo "::error::Score ${SCORE} is below threshold ${INPUT_FAIL_UNDER}"
+          exit 1
+        fi
+
+    - name: Comment on PR
+      if: inputs.comment == 'true' && github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const score = '${{ steps.audit.outputs.score }}';
+          const grade = '${{ steps.audit.outputs.grade }}';
+          const badge = '${{ steps.audit.outputs.badge }}';
+          const emoji = { A: '🟢', B: '🟢', C: '🟡', D: '🟠', F: '🔴' };
+          const e = emoji[grade] || '⚪';
+
+          // Find and update existing comment (avoid spam)
+          const { data: comments } = await github.rest.issues.listComments({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.issue.number,
+          });
+          const existing = comments.find(c =>
+            c.user.type === 'Bot' && c.body.includes('AI-Readiness Report')
+          );
+
+          const body = [
+            `## ${e} AI-Readiness Report`,
+            '',
+            `| Metric | Value |`,
+            `|--------|-------|`,
+            `| **URL** | \`${{ inputs.url }}\` |`,
+            `| **Score** | **${score}/100** |`,
+            `| **Grade** | **${grade}** |`,
+            '',
+            `![AI-Ready](${badge})`,
+            '',
+            `---`,
+            `*Powered by [GEO Audit](https://geo.glincker.com)*`,
+          ].join('\n');
+
+          if (existing) {
+            await github.rest.issues.updateComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: existing.id,
+              body,
+            });
+          } else {
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body,
+            });
+          }

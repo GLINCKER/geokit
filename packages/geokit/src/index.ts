@@ -2,6 +2,8 @@
 export {
   audit,
   getFixSuggestion,
+  formatBadge,
+  gradeToColor,
 } from "@glincker/geo-audit";
 export type {
   AuditResult,
@@ -12,6 +14,7 @@ export type {
   Grade,
   Recommendation,
   FixSuggestion,
+  BadgeSnippets,
 } from "@glincker/geo-audit";
 
 // Re-export from geo-seo

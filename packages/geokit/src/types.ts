@@ -53,6 +53,7 @@ export interface GeokitCliFlags {
   config?: string;
   timeout?: number;
   insecure?: boolean;
+  badge?: boolean;
   noMeta?: boolean;
   frontmatter?: boolean;
 }
