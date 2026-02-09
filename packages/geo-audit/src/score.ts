@@ -8,9 +8,9 @@ import { getFixSuggestion } from "./fixes.js";
 
 /** Category definitions with max points */
 const CATEGORY_DEFS = [
-  { name: "AI Discoverability", slug: "discoverability", maxPoints: 40 },
-  { name: "Structured Data", slug: "structured-data", maxPoints: 35 },
-  { name: "Content Quality", slug: "content-quality", maxPoints: 38 },
+  { name: "AI Discoverability", slug: "discoverability", maxPoints: 53 },
+  { name: "Structured Data", slug: "structured-data", maxPoints: 43 },
+  { name: "Content Quality", slug: "content-quality", maxPoints: 46 },
   { name: "Technical AI-Readiness", slug: "technical", maxPoints: 21 },
 ] as const;
 

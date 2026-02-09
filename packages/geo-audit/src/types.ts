@@ -57,8 +57,10 @@ export interface PageData {
   ttfb: number;
   totalTime: number;
   llmsTxt: FetchResult;
+  llmsFullTxt: FetchResult;
   robotsTxt: FetchResult;
   sitemapXml: FetchResult;
+  aiTxt: FetchResult;
 }
 
 /** Result of fetching a specific resource */

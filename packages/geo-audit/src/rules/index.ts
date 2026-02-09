@@ -19,28 +19,38 @@ import { r17IdentitySchema } from "./r17-identity-schema.js";
 import { r18RssFeed } from "./r18-rss-feed.js";
 import { r19LlmsQuality } from "./r19-llms-quality.js";
 import { r20Viewport } from "./r20-viewport.js";
+import { r21AiBotCoverage } from "./r21-ai-bot-coverage.js";
+import { r22LlmsFullTxt } from "./r22-llms-full-txt.js";
+import { r23AiTxt } from "./r23-ai-txt.js";
+import { r24Bluf } from "./r24-bluf.js";
+import { r25SchemaDepth } from "./r25-schema-depth.js";
 
 /** All audit rules in order */
 export const allRules: Rule[] = [
-  // AI Discoverability (40 pts)
+  // AI Discoverability (53 pts)
   r01LlmsTxt,
   r02RobotsTxt,
   r03Sitemap,
   r18RssFeed,
   r19LlmsQuality,
-  // Structured Data (35 pts)
+  r21AiBotCoverage,
+  r22LlmsFullTxt,
+  r23AiTxt,
+  // Structured Data (43 pts)
   r04JsonLd,
   r05OpenGraph,
   r06MetaDescription,
   r07Canonical,
   r17IdentitySchema,
-  // Content Quality (38 pts)
+  r25SchemaDepth,
+  // Content Quality (46 pts)
   r08Headings,
   r09SsrContent,
   r10Faq,
   r13LangTag,
   r15AltText,
   r16SemanticHtml,
+  r24Bluf,
   // Technical AI-Readiness (21 pts)
   r11ResponseTime,
   r12ContentType,
@@ -69,4 +79,9 @@ export {
   r18RssFeed,
   r19LlmsQuality,
   r20Viewport,
+  r21AiBotCoverage,
+  r22LlmsFullTxt,
+  r23AiTxt,
+  r24Bluf,
+  r25SchemaDepth,
 };

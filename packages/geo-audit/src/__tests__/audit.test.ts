@@ -11,8 +11,10 @@ vi.mock("../fetcher.js", () => ({
     ttfb: 100,
     totalTime: 200,
     llmsTxt: { ok: false, status: 404, body: "" },
+    llmsFullTxt: { ok: false, status: 404, body: "" },
     robotsTxt: { ok: true, status: 200, body: "User-agent: *\nDisallow:" },
     sitemapXml: { ok: false, status: 404, body: "" },
+    aiTxt: { ok: false, status: 404, body: "" },
   }),
 }));
 

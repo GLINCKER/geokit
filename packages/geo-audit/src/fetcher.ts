@@ -95,10 +95,12 @@ export async function fetchPageData(
   });
 
   // Fetch auxiliary resources in parallel
-  const [llmsTxt, robotsTxt, sitemapXml] = await Promise.all([
+  const [llmsTxt, llmsFullTxt, robotsTxt, sitemapXml, aiTxt] = await Promise.all([
     fetchResource(`${origin}/llms.txt`, options),
+    fetchResource(`${origin}/llms-full.txt`, options),
     fetchResource(`${origin}/robots.txt`, options),
     fetchResource(`${origin}/sitemap.xml`, options),
+    fetchResource(`${origin}/ai.txt`, options),
   ]);
 
   return {
@@ -109,7 +111,9 @@ export async function fetchPageData(
     ttfb,
     totalTime,
     llmsTxt,
+    llmsFullTxt,
     robotsTxt,
     sitemapXml,
+    aiTxt,
   };
 }

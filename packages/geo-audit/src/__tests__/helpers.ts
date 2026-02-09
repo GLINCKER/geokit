@@ -43,6 +43,7 @@ export function mockPage(overrides: Partial<PageData> = {}): PageData {
     ttfb: 150,
     totalTime: 300,
     llmsTxt: mockFetch({ ok: true, status: 200, body: "# Example\n\nSite description" }),
+    llmsFullTxt: mockFetch({ ok: false, status: 404, body: "" }),
     robotsTxt: mockFetch({
       ok: true,
       status: 200,
@@ -53,6 +54,7 @@ export function mockPage(overrides: Partial<PageData> = {}): PageData {
       status: 200,
       body: '<?xml version="1.0"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://example.com</loc></url></urlset>',
     }),
+    aiTxt: mockFetch({ ok: false, status: 404, body: "" }),
     ...overrides,
   };
 }

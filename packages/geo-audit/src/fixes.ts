@@ -13,6 +13,8 @@ const FIX_MAP: Record<string, FixSuggestion> = {
   R03: { command: "npx geo-seo generate --only sitemap", automatic: true },
   R04: { command: "npx geo-seo generate", automatic: false },
   R17: { command: "npx geo-seo generate", automatic: false },
+  R22: { command: "npx geo-seo generate --only llms-full-txt", automatic: true },
+  R23: { command: "npx geo-seo generate --only ai-txt", automatic: true },
 };
 
 /**
