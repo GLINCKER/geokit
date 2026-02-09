@@ -1,6 +1,6 @@
 {
   "name": "@glincker/geo-seo",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Framework-agnostic GEO asset generator — llms.txt, JSON-LD, robots.txt, and sitemap for AI discoverability.",
   "type": "module",
   "main": "./dist/index.cjs",

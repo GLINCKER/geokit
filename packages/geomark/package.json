@@ -1,6 +1,6 @@
 {
   "name": "@glincker/geomark",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Convert any URL to clean markdown with metadata — URL to readable content for LLM context windows.",
   "type": "module",
   "main": "./dist/index.cjs",
