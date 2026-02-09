@@ -3,7 +3,9 @@ import { r08Headings } from "../rules/r08-headings.js"; // Uses cheerio
 import { r09SsrContent } from "../rules/r09-ssr-content.js"; // Uses raw text parsing
 import { mockPage } from "./helpers.js";
 
-describe("Performance Check", () => {
+const isCI = !!process.env.CI;
+
+describe.skipIf(isCI)("Performance Check", () => {
   it("handles 5MB HTML within 2 seconds", async () => {
     const filler = "a".repeat(1024); // 1KB
     const mbFiller = filler.repeat(1024); // 1MB

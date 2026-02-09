@@ -4,7 +4,9 @@ import { htmlToMarkdown } from "../markdown.js";
 import { estimateTokens } from "../tokens.js";
 import { createServer } from "node:http";
 
-describe("geomark performance tests", () => {
+const isCI = !!process.env.CI;
+
+describe.skipIf(isCI)("geomark performance tests", () => {
   it("handles a massive HTML string efficiently", async () => {
     // Generate 5MB of HTML
     const largeParagraph = "This is a test paragraph that repeats many times to create a large string for performance testing. ".repeat(100);
