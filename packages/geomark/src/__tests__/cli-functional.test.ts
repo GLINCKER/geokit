@@ -27,7 +27,7 @@ describe("geomark CLI functional tests", () => {
       `);
     });
     await new Promise<void>((resolve) => {
-      server.listen(port, resolve);
+      server.listen(port, "127.0.0.1", resolve);
     });
   });
 
