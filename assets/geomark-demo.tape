@@ -6,31 +6,42 @@ Output assets/geomark-demo.gif
 Set Shell "bash"
 Set FontSize 15
 Set Width 1100
-Set Height 600
+Set Height 650
 Set Theme "Catppuccin Mocha"
 Set Padding 20
-Set TypingSpeed 40ms
+Set TypingSpeed 35ms
 Set WindowBar Colorful
 Set WindowBarSize 40
 
+# 1. Convert URL to markdown
 Type "# @glincker/geomark — URL to clean markdown"
 Enter
-Sleep 800ms
+Sleep 600ms
 
-Type "npx geomark https://glincker.com"
+Type "npx geomark https://stripe.com | head -30"
 Enter
 Sleep 10s
 
+# 2. JSON with metadata + token count
 Type ""
 Enter
-Type "# JSON output with metadata and token count"
+Type "# JSON output with metadata and token estimate"
 Enter
-Sleep 800ms
+Sleep 600ms
 
-Type "npx geomark https://glincker.com --json | head -30"
+Type "npx geomark https://stripe.com --json | head -25"
 Enter
 Sleep 8s
 
+# 3. Frontmatter for LLM context
 Type ""
 Enter
-Sleep 2s
+Type "# YAML frontmatter for LLM context windows"
+Enter
+Sleep 600ms
+
+Type "npx geomark https://stripe.com --frontmatter | head -15"
+Enter
+Sleep 8s
+
+Sleep 3s
