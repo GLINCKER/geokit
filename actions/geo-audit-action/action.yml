@@ -1,5 +1,5 @@
 name: "GEO Audit — AI-Readiness Score"
-description: "Audit any website's AI-readiness. Scores 20 rules across discoverability, structured data, content quality, and technical readiness. Returns 0-100 score with A-F grade."
+description: "Audit any website's AI-readiness score. 20 rules, 0-100 score, A-F grade with PR comments."
 author: "GLINCKER"
 
 branding:

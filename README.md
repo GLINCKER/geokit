@@ -10,6 +10,7 @@
   <a href="https://www.npmjs.com/package/@glincker/geokit"><img src="https://img.shields.io/npm/v/@glincker/geokit.svg?label=geokit" alt="npm version"></a>
   <a href="https://github.com/glincker/geokit/actions"><img src="https://github.com/glincker/geokit/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
+  <a href="https://github.com/marketplace/actions/geo-audit-ai-readiness-score"><img src="https://img.shields.io/badge/GitHub%20Action-Marketplace-blue?logo=github" alt="GitHub Action"></a>
 </p>
 
 ---
@@ -49,6 +50,9 @@ npx @glincker/geo-audit https://yoursite.com
 # Install globally
 npm install -g @glincker/geo-audit
 geo-audit https://yoursite.com
+
+# Get a badge snippet for your README
+geo-audit https://yoursite.com --badge
 ```
 
 ### Example
@@ -90,6 +94,20 @@ Technical AI-Readiness  16/21
 - **Content Quality** (38 pts) — Headings, SSR, FAQ schema, lang tag, alt text, semantic HTML
 - **Technical** (21 pts) — Response time, content encoding, HTTPS, viewport
 
+## GitHub Action
+
+Add AI-readiness checks to your CI/CD pipeline with our [Marketplace action](https://github.com/marketplace/actions/geo-audit-ai-readiness-score):
+
+```yaml
+- uses: GLINCKER/geo-audit-action@v1
+  with:
+    url: https://yoursite.com
+    fail-under: 70
+    comment: true
+```
+
+Outputs `score`, `grade`, `badge`, and full `result` JSON. Posts a PR comment with your AI-readiness report.
+
 ## Why GEO Matters
 
 - **ChatGPT, Claude, and Perplexity** handle millions of searches daily
@@ -103,7 +121,7 @@ git clone https://github.com/glincker/geokit.git
 cd geokit
 npm install
 npm run build    # Build all packages
-npm run test     # Run all tests (311 passing)
+npm run test     # Run all tests (323 passing)
 ```
 
 ## Contributing
@@ -117,6 +135,7 @@ MIT - see [LICENSE](./LICENSE)
 ## Links
 
 - [geo.glincker.com](https://geo.glincker.com)
+- [GitHub Action (Marketplace)](https://github.com/marketplace/actions/geo-audit-ai-readiness-score)
 - [npm: @glincker/geo-audit](https://www.npmjs.com/package/@glincker/geo-audit)
 - [Report Issues](https://github.com/glincker/geokit/issues)
 

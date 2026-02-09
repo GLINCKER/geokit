@@ -182,6 +182,7 @@ geo-audit https://example.com --json
 | `--json` | `-j` | Output results as JSON instead of formatted text |
 | `--verbose` | | Show detailed information for each rule |
 | `--quiet` | `-q` | Only show score and grade (minimal output) |
+| `--badge` | | Output shields.io badge snippets (markdown, HTML) |
 | `--fail-under <n>` | | Exit with code 2 if score is below threshold (useful for CI/CD) |
 | `--timeout <ms>` | | Set HTTP request timeout in milliseconds (default: 10000) |
 | `--no-recommendations` | | Hide the recommendations section from output |
@@ -221,9 +222,25 @@ interface AuditOptions {
 }
 ```
 
+## Badge
+
+Add an AI-readiness badge to your README:
+
+```bash
+geo-audit https://yoursite.com --badge
+```
+
+Output:
+
+```markdown
+[![AI-Ready: 85 (A)](https://img.shields.io/badge/AI--Ready-85%20(A)-brightgreen)](https://geo.glincker.com)
+```
+
 ## CI/CD Integration
 
-Use GeoAudit in your CI/CD pipeline to enforce AI-readiness standards:
+### GitHub Action (recommended)
+
+Use the [GEO Audit GitHub Action](https://github.com/marketplace/actions/geo-audit-ai-readiness-score) from the Marketplace:
 
 ```yaml
 # .github/workflows/geo-audit.yml
@@ -237,19 +254,25 @@ on:
 jobs:
   audit:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Install Node.js
-        uses: actions/setup-node@v4
+      - uses: GLINCKER/geo-audit-action@v1
         with:
-          node-version: '18'
-
-      - name: Run GEO Audit
-        run: npx @glincker/geo-audit https://yourdomain.com --fail-under 70
+          url: https://yourdomain.com
+          fail-under: 70
+          comment: true
 ```
 
-This will fail the build if your site scores below 70/100.
+The action outputs `score`, `grade`, `badge` URL, and full `result` JSON. Set `comment: true` to post a report as a PR comment.
+
+### Manual npx
+
+```bash
+npx @glincker/geo-audit https://yourdomain.com --fail-under 70
+```
+
+Exits with code 2 if score is below threshold.
 
 ## Why GEO Matters
 
