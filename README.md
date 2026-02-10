@@ -134,7 +134,7 @@ MIT - see [LICENSE](./LICENSE)
 
 ## Links
 
-- [geo.glincker.com](https://geo.glincker.com)
+- [typeweaver.com/docs/geokit](https://typeweaver.com/docs/geokit)
 - [GitHub Action (Marketplace)](https://github.com/marketplace/actions/geo-audit-ai-readiness-score)
 - [npm: @glincker/geo-audit](https://www.npmjs.com/package/@glincker/geo-audit)
 - [Report Issues](https://github.com/glincker/geokit/issues)

@@ -14,6 +14,13 @@ inputs:
     description: "Minimum score threshold — fail the step if score is below this value (0 = never fail)"
     required: false
     default: "0"
+  api-key:
+    description: "GeoKit Cloud API key (optional) — enables cloud mode with history tracking and team visibility"
+    required: false
+  api-url:
+    description: "GeoKit Cloud API URL (defaults to production)"
+    required: false
+    default: "https://api.geokit.dev"
   comment:
     description: "Post score as a PR comment (requires pull_request trigger and write permissions)"
     required: false
@@ -27,7 +34,7 @@ inputs:
     required: false
     default: "15000"
   version:
-    description: "Specific @glincker/geo-audit version to use (default: latest)"
+    description: "Specific @glincker/geo-audit version to use (local mode only, default: latest)"
     required: false
     default: "latest"
 
@@ -58,30 +65,120 @@ runs:
       shell: bash
       env:
         INPUT_URL: ${{ inputs.url }}
+        INPUT_API_KEY: ${{ inputs.api-key }}
+        INPUT_API_URL: ${{ inputs.api-url }}
         INPUT_TIMEOUT: ${{ inputs.timeout }}
         INPUT_VERSION: ${{ inputs.version }}
         INPUT_FAIL_UNDER: ${{ inputs.fail-under }}
         INPUT_BADGE: ${{ inputs.badge }}
+        GITHUB_CONTEXT: ${{ toJSON(github) }}
       run: |
         set -euo pipefail
 
-        # Install and run audit
-        RESULT=$(npx --yes "@glincker/geo-audit@${INPUT_VERSION}" "${INPUT_URL}" --json --timeout "${INPUT_TIMEOUT}" 2>/dev/null) || {
-          echo "::error::Failed to audit ${INPUT_URL}. Check the URL is accessible."
-          exit 1
-        }
+        # ─── CLOUD MODE (API key provided) ────────────────────────
+        if [ -n "${INPUT_API_KEY}" ]; then
+          echo "🌩️  Running in Cloud Mode (with API key)"
 
-        # Parse score and grade safely
-        SCORE=$(echo "$RESULT" | node -e "
-          const d = require('fs').readFileSync('/dev/stdin','utf8');
-          try { console.log(JSON.parse(d).score); }
-          catch { console.log('-1'); }
-        ")
-        GRADE=$(echo "$RESULT" | node -e "
-          const d = require('fs').readFileSync('/dev/stdin','utf8');
-          try { console.log(JSON.parse(d).grade); }
-          catch { console.log('?'); }
-        ")
+          # Build metadata payload with GitHub context
+          METADATA=$(node -e "
+            const ctx = ${GITHUB_CONTEXT};
+            const meta = {
+              repo: ctx.repository || null,
+              branch: ctx.ref?.replace('refs/heads/', '') || null,
+              commit: ctx.sha || null,
+              pr: ctx.event?.pull_request?.number || null,
+              actor: ctx.actor || null,
+              workflow: ctx.workflow || null,
+            };
+            console.log(JSON.stringify(meta));
+          ")
+
+          # Call GeoKit Cloud API
+          RESPONSE=$(curl -s -X POST "${INPUT_API_URL}/api/audits/ci" \
+            -H "Authorization: Bearer ${INPUT_API_KEY}" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"url\": \"${INPUT_URL}\",
+              \"failUnder\": ${INPUT_FAIL_UNDER},
+              \"metadata\": ${METADATA}
+            }" 2>/dev/null) || {
+            echo "::error::Failed to reach GeoKit Cloud API at ${INPUT_API_URL}"
+            exit 1
+          }
+
+          # Parse cloud response
+          SCORE=$(echo "$RESPONSE" | node -e "
+            const d = require('fs').readFileSync('/dev/stdin','utf8');
+            try { const j = JSON.parse(d); console.log(j.score ?? '-1'); }
+            catch { console.log('-1'); }
+          ")
+          GRADE=$(echo "$RESPONSE" | node -e "
+            const d = require('fs').readFileSync('/dev/stdin','utf8');
+            try { const j = JSON.parse(d); console.log(j.grade ?? '?'); }
+            catch { console.log('?'); }
+          ")
+          PASS=$(echo "$RESPONSE" | node -e "
+            const d = require('fs').readFileSync('/dev/stdin','utf8');
+            try { const j = JSON.parse(d); console.log(j.pass ? 'true' : 'false'); }
+            catch { console.log('false'); }
+          ")
+          AUDIT_ID=$(echo "$RESPONSE" | node -e "
+            const d = require('fs').readFileSync('/dev/stdin','utf8');
+            try { const j = JSON.parse(d); console.log(j.auditId || ''); }
+            catch { console.log(''); }
+          ")
+
+          # Handle API errors
+          if [ "$SCORE" = "-1" ] || [ "$GRADE" = "?" ]; then
+            ERROR_MSG=$(echo "$RESPONSE" | node -e "
+              const d = require('fs').readFileSync('/dev/stdin','utf8');
+              try { const j = JSON.parse(d); console.log(j.error || 'Unknown error'); }
+              catch { console.log('Failed to parse response'); }
+            ")
+            echo "::error::GeoKit Cloud API error: ${ERROR_MSG}"
+            exit 1
+          fi
+
+          # Build RESULT for downstream compatibility
+          RESULT=$(echo "$RESPONSE" | node -e "
+            const d = require('fs').readFileSync('/dev/stdin','utf8');
+            const apiResp = JSON.parse(d);
+            // Convert cloud response to local format for compatibility
+            const result = {
+              score: apiResp.score,
+              grade: apiResp.grade,
+              recommendations: apiResp.failedRules?.map(r => ({
+                message: r.description,
+                impact: r.impact || 0
+              })) || []
+            };
+            console.log(JSON.stringify(result));
+          ")
+
+          echo "✅ Cloud audit complete (Audit ID: ${AUDIT_ID})"
+
+        # ─── LOCAL MODE (no API key) ──────────────────────────────
+        else
+          echo "🖥️  Running in Local Mode (no API key)"
+
+          # Install and run audit locally
+          RESULT=$(npx --yes "@glincker/geo-audit@${INPUT_VERSION}" "${INPUT_URL}" --json --timeout "${INPUT_TIMEOUT}" 2>/dev/null) || {
+            echo "::error::Failed to audit ${INPUT_URL}. Check the URL is accessible."
+            exit 1
+          }
+
+          # Parse score and grade safely
+          SCORE=$(echo "$RESULT" | node -e "
+            const d = require('fs').readFileSync('/dev/stdin','utf8');
+            try { console.log(JSON.parse(d).score); }
+            catch { console.log('-1'); }
+          ")
+          GRADE=$(echo "$RESULT" | node -e "
+            const d = require('fs').readFileSync('/dev/stdin','utf8');
+            try { console.log(JSON.parse(d).grade); }
+            catch { console.log('?'); }
+          ")
+        fi
 
         if [ "$SCORE" = "-1" ] || [ "$GRADE" = "?" ]; then
           echo "::error::Failed to parse audit result for ${INPUT_URL}"
